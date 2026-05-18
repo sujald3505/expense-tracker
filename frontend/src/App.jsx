@@ -21,6 +21,8 @@ import Setting from './pages/admin/Setting';
 
 import UserLayout from './layouts/UserLayout';
 import Dashboard from './pages/user/Dashboard';
+import AddTransaction from './pages/user/AddTransaction';
+import UserTransaction from './pages/user/UserTransactions';
 
 const App = () => {
   return (
@@ -54,6 +56,8 @@ const App = () => {
 
                   <Route path='/user/layout' element={<UserLayout />}/>
                   <Route path='/user/dashboard' element={<Dashboard />}/>
+                  <Route path='/user/addtransaction' element={<AddTransaction />}/>
+                  <Route path='/user/transaction' element={<UserTransaction />}/>
 
               </Route>
 

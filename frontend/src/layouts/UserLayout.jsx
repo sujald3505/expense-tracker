@@ -34,19 +34,19 @@ const UserLayout = ({
   const menus = [
     {
       name: "🏠 Dashboard",
-      path: "",
+      path: "/user/dashboard",
     },
 
     {
       name: "➕ Add Transaction",
       path:
-        "/add-transaction",
+        "/user/addtransaction",
     },
 
     {
       name: "💰 Transactions",
       path:
-        "/transactions",
+        "/user/transaction",
     },
 
     {
