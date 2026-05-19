@@ -23,6 +23,8 @@ import UserLayout from './layouts/UserLayout';
 import Dashboard from './pages/user/Dashboard';
 import AddTransaction from './pages/user/AddTransaction';
 import UserTransaction from './pages/user/UserTransactions';
+import UserReport from './pages/user/UserReports';
+import Profile from './pages/user/Profile';
 
 const App = () => {
   return (
@@ -58,6 +60,8 @@ const App = () => {
                   <Route path='/user/dashboard' element={<Dashboard />}/>
                   <Route path='/user/addtransaction' element={<AddTransaction />}/>
                   <Route path='/user/transaction' element={<UserTransaction />}/>
+                  <Route path='/user/report' element={<UserReport />}/>
+                  <Route path='/user/profile' element={<Profile />}/>
 
               </Route>
 

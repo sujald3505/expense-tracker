@@ -51,12 +51,12 @@ const UserLayout = ({
 
     {
       name: "📊 Reports",
-      path: "/reports",
+      path: "/user/report",
     },
 
     {
       name: "👤 Profile",
-      path: "/profile",
+      path: "/user/profile",
     },
 
     {
