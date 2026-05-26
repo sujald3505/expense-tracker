@@ -1,3 +1,50 @@
+// import { Router } from "express";
+
+// import {
+//   getTransactions,
+//   createTransaction,
+//   deleteTransactions,
+//   getAllTransactions,
+//   downloadTransactionPDF,
+// } from "../controllers/transaction.controller.js";
+
+// import { authenticate } from "../middleware/authenticate.js";
+
+// const transactionRoute = Router();
+
+// // ============================
+// // GET USER TRANSACTIONS
+// // ============================
+
+// transactionRoute.get("/", authenticate, getTransactions);
+
+// // ============================
+// // GET ALL TRANSACTIONS (ADMIN)
+// // ============================
+
+// transactionRoute.get("/all", authenticate, getAllTransactions);
+
+// // ============================
+// // CREATE TRANSACTION
+// // ============================
+
+// transactionRoute.post("/", authenticate, createTransaction);
+
+// // ============================
+// // DELETE TRANSACTION
+// // ============================
+
+// transactionRoute.delete("/:id", authenticate, deleteTransactions);
+
+// transactionRoute.get(
+//   "/download/pdf",
+//   authenticate,
+//   downloadTransactionPDF
+// );
+
+// export default transactionRoute;
+
+
 import { Router } from "express";
 
 import {
@@ -8,38 +55,75 @@ import {
   downloadTransactionPDF,
 } from "../controllers/transaction.controller.js";
 
-import { authenticate } from "../middleware/authenticate.js";
+import {
+  getInsights,
+} from "../controllers/insight.controller.js";
 
-const transactionRoute = Router();
+import {
+  authenticate,
+} from "../middleware/authenticate.js";
+
+const transactionRoute =
+  Router();
 
 // ============================
 // GET USER TRANSACTIONS
 // ============================
 
-transactionRoute.get("/", authenticate, getTransactions);
+transactionRoute.get(
+  "/",
+  authenticate,
+  getTransactions
+);
 
 // ============================
 // GET ALL TRANSACTIONS (ADMIN)
 // ============================
 
-transactionRoute.get("/all", authenticate, getAllTransactions);
+transactionRoute.get(
+  "/all",
+  authenticate,
+  getAllTransactions
+);
 
 // ============================
-// CREATE TRANSACTION
+// AI INSIGHTS
 // ============================
 
-transactionRoute.post("/", authenticate, createTransaction);
+transactionRoute.get(
+  "/insights",
+  authenticate,
+  getInsights
+);
 
 // ============================
-// DELETE TRANSACTION
+// DOWNLOAD PDF
 // ============================
-
-transactionRoute.delete("/:id", authenticate, deleteTransactions);
 
 transactionRoute.get(
   "/download/pdf",
   authenticate,
   downloadTransactionPDF
+);
+
+// ============================
+// CREATE TRANSACTION
+// ============================
+
+transactionRoute.post(
+  "/",
+  authenticate,
+  createTransaction
+);
+
+// ============================
+// DELETE TRANSACTION
+// ============================
+
+transactionRoute.delete(
+  "/:id",
+  authenticate,
+  deleteTransactions
 );
 
 export default transactionRoute;

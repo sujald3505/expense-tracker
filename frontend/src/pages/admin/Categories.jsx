@@ -99,7 +99,7 @@ const Categories = () => {
           placeholder="Enter category name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="border w-full h-[50px] px-4 rounded-lg outline-none"
+          className="border w-full h-[50] px-4 rounded-lg outline-none"
         />
 
         <button
