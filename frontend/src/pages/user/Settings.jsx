@@ -105,25 +105,11 @@ const Settings = () => {
           {/* CARD HEADER */}
 
           <div className="mb-6">
-            <h2
-              className="
-              text-xl
-              sm:text-2xl
-              font-bold
-              text-gray-800
-            "
-            >
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 ">
               Change Password
             </h2>
 
-            <p
-              className="
-              text-sm
-              sm:text-base
-              text-gray-500
-              mt-2
-            "
-            >
+            <p className="text-sm sm:text-base text-gray-500 mt-2">
               Update your account password securely
             </p>
           </div>
@@ -134,16 +120,7 @@ const Settings = () => {
             {/* CURRENT PASSWORD */}
 
             <div>
-              <label
-                className="
-                block
-                mb-2
-                font-semibold
-                text-sm
-                sm:text-base
-                text-gray-700
-              "
-              >
+              <label className="block mb-2 font-semibold text-sm sm:text-base text-gray-700">
                 Current Password
               </label>
 
@@ -152,19 +129,8 @@ const Settings = () => {
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 placeholder="Enter current password"
-                className="
-                w-full
-                h-[50px]
-                sm:h-[55px]
-                border
-                border-gray-300
-                rounded-xl
-                px-4
-                outline-none
-                focus:border-black
-                text-sm
-                sm:text-base
-              "
+                className="w-full h-[50px] sm:h-[55px] border border-gray-300 rounded-xl px-4
+                outline-none focus:border-black text-sm sm:text-base"
                 required
               />
             </div>
