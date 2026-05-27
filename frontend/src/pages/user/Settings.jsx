@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 
 import { toast } from "react-toastify";
@@ -5,51 +6,92 @@ import { toast } from "react-toastify";
 import UserLayout from "../../layouts/UserLayout";
 
 const Settings = () => {
-  const [currentPassword, setCurrentPassword] = useState("");
 
-  const [newPassword, setNewPassword] = useState("");
+  const [
+    currentPassword,
+    setCurrentPassword,
+  ] = useState("");
+
+  const [
+    newPassword,
+    setNewPassword,
+  ] = useState("");
 
   // ============================
   // CHANGE PASSWORD
   // ============================
 
-  const handleChangePassword = async (e) => {
-    e.preventDefault();
+  const handleChangePassword =
+    async (e) => {
 
-    try {
-      const token = localStorage.getItem("token");
+      e.preventDefault();
 
-      const response = await fetch(
-        "http://localhost:8080/api/user/change-password",
-        {
-          method: "PUT",
+      try {
 
-          headers: {
-            "Content-Type": "application/json",
+        const token =
+          localStorage.getItem(
+            "token"
+          );
 
-            Authorization: `Bearer ${token}`,
-          },
+        const response =
+          await fetch(
+            "http://localhost:8080/api/user/change-password",
+            {
+              method: "PUT",
 
-          body: JSON.stringify({
-            currentPassword,
-            newPassword,
-          }),
-        },
-      );
+              headers: {
+                "Content-Type":
+                  "application/json",
 
-      await response.json();
+                Authorization:
+                  `Bearer ${token}`,
+              },
 
-      toast.success("Password Updated Successfully");
+              body: JSON.stringify({
+                currentPassword,
+                newPassword,
+              }),
+            },
+          );
 
-      setCurrentPassword("");
-      setNewPassword("");
-    } catch (error) {
-      console.log(error);
-    }
-  };
+        const data =
+          await response.json();
+
+        // ============================
+        // WRONG PASSWORD
+        // ============================
+
+        if (!response.ok) {
+
+          return toast.error(
+            data.message ||
+              "Current Password Incorrect"
+          );
+        }
+
+        // SUCCESS
+        toast.success(
+          "Password Updated Successfully"
+        );
+
+        setCurrentPassword("");
+
+        setNewPassword("");
+
+      } catch (error) {
+
+        console.log(error);
+
+        toast.error(
+          "Something went wrong"
+        );
+      }
+    };
 
   return (
+
     <UserLayout>
+
       {/* ================= MAIN CONTAINER ================= */}
 
       <div
@@ -61,9 +103,11 @@ const Settings = () => {
         sm:p-6
       "
       >
+
         {/* ================= HEADER ================= */}
 
         <div className="mb-6 md:mb-8">
+
           <h1
             className="
             text-2xl
@@ -86,6 +130,7 @@ const Settings = () => {
           >
             Manage your account settings
           </p>
+
         </div>
 
         {/* ================= SETTINGS CARD ================= */}
@@ -102,42 +147,77 @@ const Settings = () => {
           lg:p-8
         "
         >
+
           {/* CARD HEADER */}
 
           <div className="mb-6">
+
             <h2 className="text-xl sm:text-2xl font-bold text-gray-800 ">
+
               Change Password
+
             </h2>
 
             <p className="text-sm sm:text-base text-gray-500 mt-2">
+
               Update your account password securely
+
             </p>
+
           </div>
 
           {/* FORM */}
 
-          <form onSubmit={handleChangePassword} className="space-y-5">
+          <form
+            onSubmit={
+              handleChangePassword
+            }
+            className="space-y-5"
+          >
+
             {/* CURRENT PASSWORD */}
 
             <div>
+
               <label className="block mb-2 font-semibold text-sm sm:text-base text-gray-700">
+
                 Current Password
+
               </label>
 
               <input
                 type="password"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
+                value={
+                  currentPassword
+                }
+                onChange={(e) =>
+                  setCurrentPassword(
+                    e.target.value
+                  )
+                }
                 placeholder="Enter current password"
-                className="w-full h-[50px] sm:h-[55px] border border-gray-300 rounded-xl px-4
-                outline-none focus:border-black text-sm sm:text-base"
+                className="
+                w-full
+                h-[50px]
+                sm:h-[55px]
+                border
+                border-gray-300
+                rounded-xl
+                px-4
+                outline-none
+                focus:border-black
+                text-sm
+                sm:text-base
+              "
                 required
               />
+
             </div>
 
             {/* NEW PASSWORD */}
 
             <div>
+
               <label
                 className="
                 block
@@ -148,13 +228,21 @@ const Settings = () => {
                 text-gray-700
               "
               >
+
                 New Password
+
               </label>
 
               <input
                 type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
+                value={
+                  newPassword
+                }
+                onChange={(e) =>
+                  setNewPassword(
+                    e.target.value
+                  )
+                }
                 placeholder="Enter new password"
                 className="
                 w-full
@@ -171,6 +259,7 @@ const Settings = () => {
               "
                 required
               />
+
             </div>
 
             {/* BUTTON */}
@@ -191,11 +280,17 @@ const Settings = () => {
               transition
             "
             >
+
               Update Password
+
             </button>
+
           </form>
+
         </div>
+
       </div>
+
     </UserLayout>
   );
 };

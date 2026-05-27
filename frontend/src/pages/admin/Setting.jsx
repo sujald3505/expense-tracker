@@ -1,128 +1,592 @@
 import React, { useEffect, useState } from "react";
 
+import { toast } from "react-toastify";
+
 import AdminLayout from "../../layouts/AdminLayout";
 
 const Settings = () => {
-  const [currency, setCurrency] = useState("INR");
 
-  const [theme, setTheme] = useState("light");
+  // ============================
+  // PROFILE STATES
+  // ============================
 
-  // GET SETTINGS
-  const getSettings = async () => {
+  const [name, setName] = useState("");
+
+  const [email, setEmail] = useState("");
+
+  const [phone, setPhone] = useState("");
+
+  // ============================
+  // PASSWORD STATES
+  // ============================
+
+  const [
+    currentPassword,
+    setCurrentPassword,
+  ] = useState("");
+
+  const [
+    newPassword,
+    setNewPassword,
+  ] = useState("");
+
+  const [
+    confirmPassword,
+    setConfirmPassword,
+  ] = useState("");
+
+  // ============================
+  // GET ADMIN PROFILE
+  // ============================
+
+  const getProfile = async () => {
+
     try {
-      const token = localStorage.getItem("token");
 
-      const response = await fetch("http://localhost:8080/api/setting", {
-        method: "GET",
+      const token =
+        localStorage.getItem(
+          "token"
+        );
 
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response =
+        await fetch(
+          "http://localhost:8080/api/user/profile",
+          {
+            method: "GET",
 
-      const data = await response.json();
+            headers: {
+              Authorization:
+                `Bearer ${token}`,
+            },
+          }
+        );
 
-      setCurrency(data.settings.currency);
+      const data =
+        await response.json();
 
-      setTheme(data.settings.theme);
+      if (response.ok) {
+
+        setName(data.user?.name || "");
+
+        setEmail(data.user?.email || "");
+
+        setPhone(data.user?.phone || "");
+      }
+
     } catch (error) {
+
       console.log(error);
     }
   };
 
-  // UPDATE SETTINGS
-  const updateSettings = async (e) => {
-    e.preventDefault();
+  // ============================
+  // UPDATE PROFILE
+  // ============================
 
-    try {
-      const token = localStorage.getItem("token");
+  const handleUpdateProfile =
+    async (e) => {
 
-      const response = await fetch("http://localhost:8080/api/setting", {
-        method: "PUT",
+      e.preventDefault();
 
-        headers: {
-          "Content-Type": "application/json",
+      try {
 
-          Authorization: `Bearer ${token}`,
-        },
+        const token =
+          localStorage.getItem(
+            "token"
+          );
 
-        body: JSON.stringify({
-          currency,
-          theme,
-        }),
-      });
+        const response =
+          await fetch(
+            "http://localhost:8080/api/user/profile",
+            {
+              method: "PUT",
 
-      const data = await response.json();
+              headers: {
+                "Content-Type":
+                  "application/json",
 
-      alert(data.message);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+                Authorization:
+                  `Bearer ${token}`,
+              },
+
+              body: JSON.stringify({
+                name,
+                email,
+                phone,
+              }),
+            }
+          );
+
+        const data =
+          await response.json();
+
+        if (!response.ok) {
+
+          return toast.error(
+            data.message ||
+            "Profile Update Failed"
+          );
+        }
+
+        toast.success(
+          data.message ||
+          "Profile Updated Successfully"
+        );
+
+      } catch (error) {
+
+        console.log(error);
+
+        toast.error(
+          "Something went wrong"
+        );
+      }
+    };
+
+  // ============================
+  // CHANGE PASSWORD
+  // ============================
+
+  const handleChangePassword =
+    async (e) => {
+
+      e.preventDefault();
+
+      // PASSWORD MATCH CHECK
+
+      if (
+        newPassword !==
+        confirmPassword
+      ) {
+
+        return toast.error(
+          "New Password and Confirm Password do not match"
+        );
+      }
+
+      try {
+
+        const token =
+          localStorage.getItem(
+            "token"
+          );
+
+        const response =
+          await fetch(
+            "http://localhost:8080/api/user/change-password",
+            {
+              method: "PUT",
+
+              headers: {
+                "Content-Type":
+                  "application/json",
+
+                Authorization:
+                  `Bearer ${token}`,
+              },
+
+              body: JSON.stringify({
+                currentPassword,
+                newPassword,
+              }),
+            }
+          );
+
+        const data =
+          await response.json();
+
+        // ERROR
+
+        if (!response.ok) {
+
+          return toast.error(
+            data.message ||
+            "Password Change Failed"
+          );
+        }
+
+        // SUCCESS
+
+        toast.success(
+          data.message ||
+          "Password Updated Successfully"
+        );
+
+        setCurrentPassword("");
+
+        setNewPassword("");
+
+        setConfirmPassword("");
+
+      } catch (error) {
+
+        console.log(error);
+
+        toast.error(
+          "Something went wrong"
+        );
+      }
+    };
+
+  // ============================
+  // USE EFFECT
+  // ============================
 
   useEffect(() => {
-    getSettings();
+
+    getProfile();
+
   }, []);
 
   return (
+
     <AdminLayout>
-      <div className="w-full min-h-screen bg-gray-100 p-6">
-        {/* PAGE HEADER */}
+
+      <div
+        className="
+        w-full
+        min-h-screen
+        bg-gray-100
+        p-4
+        sm:p-6
+      "
+      >
+
+        {/* HEADER */}
+
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-800">Settings</h1>
 
-          <p className="text-gray-500 mt-2">Manage application settings</p>
+          <h1
+            className="
+            text-3xl
+            sm:text-4xl
+            font-bold
+            text-gray-800
+          "
+          >
+            Admin Settings
+          </h1>
+
+          <p className="text-gray-500 mt-2">
+            Manage admin account settings
+          </p>
+
         </div>
 
-        {/* SETTINGS CARD */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 max-w-3xl">
-          <form onSubmit={updateSettings} className="space-y-6">
-            {/* CURRENCY */}
-            <div>
-              <label className="block text-lg font-medium text-gray-700 mb-2">
-                Currency
-              </label>
+        {/* MAIN GRID */}
 
-              <select
-                value={currency}
-                onChange={(e) => setCurrency(e.target.value)}
-                className="w-full border h-[50px] px-4 rounded-xl outline-none"
-              >
-                <option value="INR">₹ INR</option>
+        <div
+          className="
+          grid
+          grid-cols-1
+          lg:grid-cols-2
+          gap-6
+        "
+        >
 
-                <option value="USD">$ USD</option>
+          {/* PROFILE CARD */}
 
-                <option value="EUR">€ EUR</option>
-              </select>
+          <div
+            className="
+            bg-white
+            rounded-2xl
+            shadow-lg
+            p-6
+          "
+          >
+
+            <div className="mb-6">
+
+              <h2 className="text-2xl font-bold text-gray-800">
+                Admin Profile
+              </h2>
+
+              <p className="text-gray-500 mt-1">
+                Update admin information
+              </p>
+
             </div>
 
-            {/* THEME */}
-            <div>
-              <label className="block text-lg font-medium text-gray-700 mb-2">
-                Theme
-              </label>
-
-              <select
-                value={theme}
-                onChange={(e) => setTheme(e.target.value)}
-                className="w-full border h-[50px] px-4 rounded-xl outline-none"
-              >
-                <option value="light">Light</option>
-
-                <option value="dark">Dark</option>
-              </select>
-            </div>
-
-            {/* BUTTON */}
-            <button
-              type="submit"
-              className="bg-black hover:bg-gray-800 text-white w-full h-[55px] rounded-xl text-lg font-semibold transition"
+            <form
+              onSubmit={
+                handleUpdateProfile
+              }
+              className="space-y-5"
             >
-              Save Settings
-            </button>
-          </form>
+
+              {/* NAME */}
+
+              <div>
+
+                <label className="block mb-2 font-semibold text-gray-700">
+                  Full Name
+                </label>
+
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) =>
+                    setName(
+                      e.target.value
+                    )
+                  }
+                  placeholder="Enter name"
+                  className="
+                  w-full
+                  h-[55px]
+                  border
+                  border-gray-300
+                  rounded-xl
+                  px-4
+                  outline-none
+                  focus:border-black
+                "
+                  required
+                />
+
+              </div>
+
+              {/* EMAIL */}
+
+              <div>
+
+                <label className="block mb-2 font-semibold text-gray-700">
+                  Email
+                </label>
+
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) =>
+                    setEmail(
+                      e.target.value
+                    )
+                  }
+                  placeholder="Enter email"
+                  className="
+                  w-full
+                  h-[55px]
+                  border
+                  border-gray-300
+                  rounded-xl
+                  px-4
+                  outline-none
+                  focus:border-black
+                "
+                  required
+                />
+
+              </div>
+
+              {/* PHONE */}
+
+              <div>
+
+                <label className="block mb-2 font-semibold text-gray-700">
+                  Phone
+                </label>
+
+                <input
+                  type="text"
+                  value={phone}
+                  onChange={(e) =>
+                    setPhone(
+                      e.target.value
+                    )
+                  }
+                  placeholder="Enter phone"
+                  className="
+                  w-full
+                  h-[55px]
+                  border
+                  border-gray-300
+                  rounded-xl
+                  px-4
+                  outline-none
+                  focus:border-black
+                "
+                />
+
+              </div>
+
+              {/* BUTTON */}
+
+              <button
+                type="submit"
+                className="
+                w-full
+                h-[55px]
+                bg-blue-600
+                hover:bg-blue-700
+                text-white
+                rounded-xl
+                font-semibold
+                transition
+              "
+              >
+                Update Profile
+              </button>
+
+            </form>
+
+          </div>
+
+          {/* PASSWORD CARD */}
+
+          <div
+            className="
+            bg-white
+            rounded-2xl
+            shadow-lg
+            p-6
+          "
+          >
+
+            <div className="mb-6">
+
+              <h2 className="text-2xl font-bold text-gray-800">
+                Change Password
+              </h2>
+
+              <p className="text-gray-500 mt-1">
+                Update admin password securely
+              </p>
+
+            </div>
+
+            <form
+              onSubmit={
+                handleChangePassword
+              }
+              className="space-y-5"
+            >
+
+              {/* CURRENT PASSWORD */}
+
+              <div>
+
+                <label className="block mb-2 font-semibold text-gray-700">
+                  Current Password
+                </label>
+
+                <input
+                  type="password"
+                  value={
+                    currentPassword
+                  }
+                  onChange={(e) =>
+                    setCurrentPassword(
+                      e.target.value
+                    )
+                  }
+                  placeholder="Enter current password"
+                  className="
+                  w-full
+                  h-[55px]
+                  border
+                  border-gray-300
+                  rounded-xl
+                  px-4
+                  outline-none
+                  focus:border-black
+                "
+                  required
+                />
+
+              </div>
+
+              {/* NEW PASSWORD */}
+
+              <div>
+
+                <label className="block mb-2 font-semibold text-gray-700">
+                  New Password
+                </label>
+
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) =>
+                    setNewPassword(
+                      e.target.value
+                    )
+                  }
+                  placeholder="Enter new password"
+                  className="
+                  w-full
+                  h-[55px]
+                  border
+                  border-gray-300
+                  rounded-xl
+                  px-4
+                  outline-none
+                  focus:border-black
+                "
+                  required
+                />
+
+              </div>
+
+              {/* CONFIRM PASSWORD */}
+
+              <div>
+
+                <label className="block mb-2 font-semibold text-gray-700">
+                  Confirm Password
+                </label>
+
+                <input
+                  type="password"
+                  value={
+                    confirmPassword
+                  }
+                  onChange={(e) =>
+                    setConfirmPassword(
+                      e.target.value
+                    )
+                  }
+                  placeholder="Confirm new password"
+                  className="
+                  w-full
+                  h-[55px]
+                  border
+                  border-gray-300
+                  rounded-xl
+                  px-4
+                  outline-none
+                  focus:border-black
+                "
+                  required
+                />
+
+              </div>
+
+              {/* BUTTON */}
+
+              <button
+                type="submit"
+                className="
+                w-full
+                h-[55px]
+                bg-black
+                hover:bg-gray-800
+                text-white
+                rounded-xl
+                font-semibold
+                transition
+              "
+              >
+                Update Password
+              </button>
+
+            </form>
+
+          </div>
+
         </div>
+
       </div>
+
     </AdminLayout>
   );
 };
