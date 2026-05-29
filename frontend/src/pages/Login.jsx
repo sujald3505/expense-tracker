@@ -1,118 +1,3 @@
-// import React, { useState } from "react";
-
-// import { useNavigate, Link } from "react-router";
-
-// import { toast } from "react-toastify";
-
-// const Login = () => {
-//   const navigate = useNavigate();
-
-//   const [email, setEmail] = useState("");
-
-//   const [password, setPassword] = useState("");
-
-//   // ============================
-//   // LOGIN FUNCTION
-//   // ============================
-
-//   const handleLogin = async (e) => {
-//     e.preventDefault();
-
-//     try {
-//       const response = await fetch("http://localhost:8080/api/user/login", {
-//         method: "POST",
-
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-
-//         body: JSON.stringify({
-//           email,
-
-//           password,
-//         }),
-//       });
-
-//       const data = await response.json();
-
-//       console.log(data);
-
-//       // SUCCESS
-//       if (data.success) {
-//         // SUCCESS TOAST
-//         toast.success("Login Successful");
-
-//         // SAVE TOKEN
-//         localStorage.setItem("token", data.token);
-
-//         // SAVE USER
-//         localStorage.setItem("user", JSON.stringify(data.user));
-
-//         // ADMIN LOGIN
-//         if (data.role === "admin") {
-//           navigate("/admin/dashboard");
-//         } else {
-//           // USER LOGIN
-//           navigate("/user/dashboard");
-//         }
-//       } else {
-//         // ERROR TOAST
-//         toast.error(data.message);
-//       }
-//     } catch (error) {
-//       console.log(error);
-
-//       toast.error("Login Failed");
-//     }
-//   };
-
-//   return (
-//     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-//       <div className="bg-white p-8 rounded-xl shadow-lg w-[400px]">
-//         <h1 className="text-3xl font-bold text-center mb-6">Login</h1>
-
-//         <form onSubmit={handleLogin}>
-//           {/* EMAIL */}
-//           <input
-//             type="email"
-//             placeholder="Enter Email"
-//             value={email}
-//             onChange={(e) => setEmail(e.target.value)}
-//             className="w-full border p-3 rounded-lg mb-4 outline-none"
-//           />
-
-//           {/* PASSWORD */}
-//           <input
-//             type="password"
-//             placeholder="Enter Password"
-//             value={password}
-//             onChange={(e) => setPassword(e.target.value)}
-//             className="w-full border p-3 rounded-lg mb-4 outline-none"
-//           />
-
-//           {/* BUTTON */}
-//           <button
-//             type="submit"
-//             className="w-full bg-black hover:bg-gray-800 text-white p-3 rounded-lg transition duration-300"
-//           >
-//             Login
-//           </button>
-//         </form>
-
-//         {/* REGISTER */}
-//         <p className="text-center mt-5 text-gray-600">
-//           Don't have an account?{" "}
-//           <Link to="/register" className="text-black font-semibold">
-//             Register
-//           </Link>
-//         </p>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Login;
-
 import React, { useState } from "react";
 
 import { Link, useNavigate } from "react-router";
@@ -175,17 +60,24 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-[#edf2ff] overflow-hidden relative flex items-center justify-center px-5">
       {/* TOP LEFT CIRCLE */}
-      <div className="absolute top-[-120px] left-[-120px] w-[300px] h-[300px] bg-purple-200 rounded-full opacity-50"></div>
+      <div className="absolute top-30 left-30 w-75 h-75 bg-purple-200 rounded-full opacity-50"></div>
 
       {/* BOTTOM RIGHT CIRCLE */}
-      <div className="absolute bottom-[-150px] right-[-150px] w-[350px] h-[350px] bg-blue-200 rounded-full opacity-40"></div>
+      <div className="absolute bottom-37.5 right-37.5 w-87.5 h-87.5 bg-blue-200 rounded-full opacity-40"></div>
 
       {/* CONTAINER */}
       <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 items-center gap-10 z-10">
         {/* LEFT SIDE */}
         <div className="w-full max-w-xl mx-auto">
-          <h1 className="text-6xl font-bold text-[#111827] mb-16">Login</h1>
+       
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-slate-900 tracking-tight text-center lg:text-left">
+          Login
+          </h1>
 
+  <p className="mt-4 text-lg sm:text-xl text-indigo-600 font-semibold tracking-wide text-center lg:text-left">
+    Continue Tracking Your Expenses
+  </p>
+          
           <form onSubmit={handleLogin} className="space-y-10">
             {/* EMAIL */}
             <div>

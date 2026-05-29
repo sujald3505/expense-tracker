@@ -89,10 +89,15 @@ const Register = () => {
         </div>
 
         {/* RIGHT SIDE FORM */}
+     
         <div className="w-full max-w-xl mx-auto bg-transparent">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#111827] mb-10 sm:mb-14 text-center lg:text-left">
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-slate-900 tracking-tight text-center lg:text-left">
             Register
           </h1>
+
+          <p className="mt-4 text-lg sm:text-xl text-indigo-600 font-semibold tracking-wide uppercase text-center lg:text-left">
+            Track • Save • Grow
+          </p>
 
           <form onSubmit={handleRegister} className="space-y-7 sm:space-y-8">
             {/* NAME */}

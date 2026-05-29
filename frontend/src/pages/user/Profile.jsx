@@ -327,33 +327,14 @@ const Profile = () => {
                 name="phone"
                 value={user?.phone}
                 onChange={handleChange}
-                className="
-                w-full
-                h-12.5
-                md:h-13.75
-                border
-                border-gray-300
-                rounded-xl
-                px-4
-                outline-none
-                focus:border-black
-                text-sm
-                md:text-base
-              "
+                className="w-full h-12.5 md:h-13.75 border border-gray-300
+                rounded-xl px-4 outline-none focus:border-black text-sm md:text-base"
               />
             </div>
 
             {/* GENDER */}
             <div>
-              <label
-                className="
-                block
-                mb-2
-                font-semibold
-                text-sm
-                md:text-base
-              "
-              >
+              <label className="block mb-2 font-semibold text-sm md:text-base">
                 Gender
               </label>
 

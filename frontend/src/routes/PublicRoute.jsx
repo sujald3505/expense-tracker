@@ -1,68 +1,21 @@
-// import React from "react";
-// import { Navigate, Outlet } from "react-router";
-
-// const PublicRoute = () => {
-//   const token = localStorage.getItem("token");
-
-//   return token ? <Navigate to="/dashboard" /> : <Outlet />;
-// };
-
-// export default PublicRoute;
-// import React from "react";
-
-// import { Navigate, Outlet } from "react-router-dom";
-
-// const PublicRoute = () => {
-//   const token = localStorage.getItem("token");
-
-//   return token ? <Navigate to="/admin/dashboard" /> : <Outlet />;
-// };
-
-// export default PublicRoute;
 import React from "react";
 
-import {
-  Navigate,
-  Outlet,
-} from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
 const PublicRoute = () => {
+  const token = localStorage.getItem("token");
 
-  const token =
-    localStorage.getItem(
-      "token"
-    );
-
-  const user =
-    JSON.parse(
-      localStorage.getItem(
-        "user"
-      )
-    ) || {};
+  const user = JSON.parse(localStorage.getItem("user")) || {};
 
   // USER LOGIN CHE
   if (token) {
-
     // ADMIN
-    if (
-      user?.role ===
-      "ADMIN"
-    ) {
-      return (
-        <Navigate
-          to="/admin/dashboard"
-          replace
-        />
-      );
+    if (user?.role === "ADMIN") {
+      return <Navigate to="/admin/dashboard" replace />;
     }
 
     // NORMAL USER
-    return (
-      <Navigate
-        to="/user/dashboard"
-        replace
-      />
-    );
+    return <Navigate to="/user/dashboard" replace />;
   }
 
   // LOGIN NATHI
