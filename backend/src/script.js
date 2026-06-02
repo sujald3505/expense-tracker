@@ -4,8 +4,6 @@ import express from "express";
 
 import cors from "cors";
 
-
-
 import { connectDB } from "./config/connectDB.js";
 
 import { route } from "./routes/main.route.js";

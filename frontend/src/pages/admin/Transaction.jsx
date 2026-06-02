@@ -419,7 +419,7 @@ const Transactions = () => {
                     {/* DATE */}
 
                     <td className="px-6 py-4">
-                      {new Date(transaction.date).toLocaleDateString()}
+                      {new Date(transaction.date).toLocaleDateString("en-GB")}
                     </td>
 
                     {/* ACTION */}

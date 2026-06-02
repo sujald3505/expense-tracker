@@ -73,6 +73,20 @@ export const getBudgets = async (req, res) => {
 
     const year = currentDate.getFullYear();
 
+    // CURRENT MONTH DATE RANGE
+
+    const startDate = new Date(
+      year,
+      month - 1,
+      1
+    );
+
+    const endDate = new Date(
+      year,
+      month,
+      1
+    );
+
     // GET BUDGETS
 
     const budgets = await Budget.find({
@@ -85,13 +99,19 @@ export const getBudgets = async (req, res) => {
 
     const budgetData = await Promise.all(
       budgets.map(async (budget) => {
-        const transactions = await Transaction.find({
-          user: req.userId,
+        const transactions =
+          await Transaction.find({
+            user: req.userId,
 
-          category: budget.category,
+            category: budget.category,
 
-          type: "expense",
-        });
+            type: "expense",
+
+            createdAt: {
+              $gte: startDate,
+              $lt: endDate,
+            },
+          });
 
         let spent = 0;
 
@@ -104,9 +124,10 @@ export const getBudgets = async (req, res) => {
 
           spent,
 
-          remaining: budget.amount - spent,
+          remaining:
+            budget.amount - spent,
         };
-      }),
+      })
     );
 
     res.status(200).json({
@@ -131,7 +152,10 @@ export const getBudgets = async (req, res) => {
 
 export const deleteBudget = async (req, res) => {
   try {
-    const budget = await Budget.findById(req.params.id);
+    const budget =
+      await Budget.findById(
+        req.params.id
+      );
 
     if (!budget) {
       return res.status(404).json({
@@ -146,7 +170,8 @@ export const deleteBudget = async (req, res) => {
     res.status(200).json({
       success: true,
 
-      message: "Budget Deleted Successfully",
+      message:
+        "Budget Deleted Successfully",
     });
   } catch (error) {
     console.log(error);

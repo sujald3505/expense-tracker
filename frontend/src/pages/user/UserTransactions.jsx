@@ -392,9 +392,9 @@ const Transactions = () => {
                   <div className="text-right">
                     <p className="text-sm text-gray-500">Date</p>
 
-                    <p className="font-medium">
-                      {new Date(transaction.date).toLocaleDateString()}
-                    </p>
+                      <p className="font-medium">
+                        {new Date(transaction.date).toLocaleDateString("en-GB")}
+                      </p>
                   </div>
                 </div>
 
@@ -496,8 +496,8 @@ const Transactions = () => {
                       <td className="px-6 py-4">{transaction.category}</td>
 
                       <td className="px-6 py-4">
-                        {new Date(transaction.date).toLocaleDateString()}
-                      </td>
+                          {new Date(transaction.date).toLocaleDateString("en-GB")}
+                        </td>
 
                       <td className="px-6 py-4">
                         <button
