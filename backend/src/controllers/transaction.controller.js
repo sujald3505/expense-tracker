@@ -229,8 +229,25 @@ export const downloadTransactionPDF = async (req, res) => {
       createdAt: -1,
     });
 
+    // TOTALS
+    let totalIncome = 0;
+    let totalExpense = 0;
+
+    transactions.forEach((item) => {
+      if (item.type === "income") {
+        totalIncome += item.amount;
+      } else {
+        totalExpense += item.amount;
+      }
+    });
+
+    const balance = totalIncome - totalExpense;
+
     // CREATE PDF
-    const doc = new PDFDocument();
+    const doc = new PDFDocument({
+      margin: 30,
+      size: "A4",
+    });
 
     // RESPONSE HEADERS
     res.setHeader("Content-Type", "application/pdf");
@@ -248,29 +265,73 @@ export const downloadTransactionPDF = async (req, res) => {
       align: "center",
     });
 
-    doc.moveDown();
+    doc.moveDown(2);
 
     // TABLE HEADER
     doc
-      .fontSize(14)
-      .text("Title", 50, 120)
-      .text("Amount", 200, 120)
-      .text("Type", 300, 120)
-      .text("Category", 380, 120);
+      .fontSize(12)
+      .text("Title", 40, 120)
+      .text("Amount", 160, 120)
+      .text("Type", 250, 120)
+      .text("Category", 330, 120)
+      .text("Date", 450, 120);
 
-    let y = 150;
+    // HEADER LINE
+    doc.moveTo(40, 140).lineTo(560, 140).stroke();
+
+    let y = 160;
 
     // TRANSACTIONS
     transactions.forEach((item) => {
-      doc
-        .fontSize(12)
-        .text(item.title, 50, y)
-        .text(`Rs. ${item.amount}`, 200, y)
-        .text(item.type, 300, y)
-        .text(item.category, 380, y);
+      const formattedDate = new Date(item.date).toLocaleDateString("en-GB");
 
-      y += 30;
+      doc
+        .fontSize(10)
+        .text(item.title, 40, y, {
+          width: 100,
+        })
+        .text(`Rs. ${item.amount}`, 160, y)
+        .text(item.type, 250, y)
+        .text(item.category, 330, y)
+        .text(formattedDate, 450, y);
+
+      y += 25;
+
+      // NEW PAGE
+      if (y > 750) {
+        doc.addPage();
+
+        y = 50;
+
+        doc
+          .fontSize(12)
+          .text("Title", 40, y)
+          .text("Amount", 160, y)
+          .text("Type", 250, y)
+          .text("Category", 330, y)
+          .text("Date", 450, y);
+
+        y += 30;
+      }
     });
+
+    // SUMMARY SECTION
+
+    y += 20;
+
+    doc.moveTo(40, y).lineTo(560, y).stroke();
+
+    y += 20;
+
+    doc.fontSize(14).text(`Total Credit (Income): Rs. ${totalIncome}`, 40, y);
+
+    y += 25;
+
+    doc.fontSize(14).text(`Total Debit (Expense): Rs. ${totalExpense}`, 40, y);
+
+    y += 25;
+
+    doc.fontSize(16).text(`Net Balance: Rs. ${balance}`, 40, y);
 
     // END PDF
     doc.end();
@@ -279,8 +340,7 @@ export const downloadTransactionPDF = async (req, res) => {
 
     res.status(500).json({
       success: false,
-
-      message: error.message,
+      message: error.message || "Internal Server Error",
     });
   }
 };
