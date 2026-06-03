@@ -388,6 +388,7 @@ const Transactions = () => {
                           rounded-full
                           text-sm
                           font-semibold
+                          whitespace-nowrap
 
                           ${
                             transaction.type === "income"
