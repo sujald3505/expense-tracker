@@ -8,75 +8,46 @@ import {
   downloadTransactionPDF,
 } from "../controllers/transaction.controller.js";
 
-import {
-  getInsights,
-} from "../controllers/insight.controller.js";
+import { getInsights } from "../controllers/insight.controller.js";
 
-import {
-  authenticate,
-} from "../middleware/authenticate.js";
+import { authenticate } from "../middleware/authenticate.js";
 
-const transactionRoute =
-  Router();
+const transactionRoute = Router();
 
 // ============================
 // GET USER TRANSACTIONS
 // ============================
 
-transactionRoute.get(
-  "/",
-  authenticate,
-  getTransactions
-);
+transactionRoute.get("/", authenticate, getTransactions);
 
 // ============================
 // GET ALL TRANSACTIONS (ADMIN)
 // ============================
 
-transactionRoute.get(
-  "/all",
-  authenticate,
-  getAllTransactions
-);
+transactionRoute.get("/all", authenticate, getAllTransactions);
 
 // ============================
 // AI INSIGHTS
 // ============================
 
-transactionRoute.get(
-  "/insights",
-  authenticate,
-  getInsights
-);
+transactionRoute.get("/insights", authenticate, getInsights);
 
 // ============================
 // DOWNLOAD PDF
 // ============================
 
-transactionRoute.get(
-  "/download/pdf",
-  authenticate,
-  downloadTransactionPDF
-);
+transactionRoute.get("/download/pdf", authenticate, downloadTransactionPDF);
 
 // ============================
 // CREATE TRANSACTION
 // ============================
 
-transactionRoute.post(
-  "/",
-  authenticate,
-  createTransaction
-);
+transactionRoute.post("/", authenticate, createTransaction);
 
 // ============================
 // DELETE TRANSACTION
 // ============================
 
-transactionRoute.delete(
-  "/:id",
-  authenticate,
-  deleteTransactions
-);
+transactionRoute.delete("/:id", authenticate, deleteTransactions);
 
 export default transactionRoute;
