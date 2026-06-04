@@ -1,3 +1,5 @@
+
+
 import { Router } from "express";
 
 import {
@@ -11,7 +13,6 @@ import {
 } from "../controllers/user.controllers.js";
 
 import { authenticate } from "../middleware/authenticate.js";
-
 import { upload } from "../middleware/uploadMiddleware.js";
 
 const userRoute = Router();
@@ -35,32 +36,12 @@ userRoute.post(
 );
 
 // ============================
-// GET USERS
-// ============================
-
-userRoute.get(
-  "/",
-  getUsers
-);
-
-// ============================
-// DELETE USER
-// ============================
-
-userRoute.delete(
-  "/:id",
-  deleteUser
-);
-
-// ============================
 // GET PROFILE
 // ============================
 
 userRoute.get(
   "/profile",
-
   authenticate,
-
   getProfile
 );
 
@@ -70,13 +51,8 @@ userRoute.get(
 
 userRoute.put(
   "/profile",
-
   authenticate,
-
-  upload.single(
-    "profileImage"
-  ),
-
+  upload.single("profileImage"),
   updateProfile
 );
 
@@ -86,10 +62,28 @@ userRoute.put(
 
 userRoute.put(
   "/change-password",
-
   authenticate,
-
   changePassword
+);
+
+// ============================
+// GET ALL USERS
+// ============================
+
+userRoute.get(
+  "/",
+  authenticate,
+  getUsers
+);
+
+// ============================
+// DELETE USER
+// ============================
+
+userRoute.delete(
+  "/:id",
+  authenticate,
+  deleteUser
 );
 
 export default userRoute;

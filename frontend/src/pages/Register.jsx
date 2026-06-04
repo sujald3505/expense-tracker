@@ -1,9 +1,6 @@
 import React, { useState } from "react";
-
 import { Link, useNavigate } from "react-router";
-
 import { toast } from "react-toastify";
-
 import { User, Mail, Lock } from "lucide-react";
 
 const Register = () => {
@@ -20,7 +17,6 @@ const Register = () => {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-
       [e.target.name]: e.target.value,
     });
   };
@@ -29,32 +25,64 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    // PASSWORD CHECK
+    // EMPTY FIELD VALIDATION
+    if (
+      !formData.name.trim() ||
+      !formData.email.trim() ||
+      !formData.password.trim() ||
+      !formData.confirmPassword.trim()
+    ) {
+      return toast.error("All fields are required");
+    }
+
+    // EMAIL VALIDATION
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(formData.email)) {
+      return toast.error("Please enter a valid email");
+    }
+
+    // PASSWORD LENGTH
+    if (formData.password.length < 6) {
+      return toast.error(
+        "Password must be at least 6 characters"
+      );
+    }
+
+    // PASSWORD MATCH CHECK
     if (formData.password !== formData.confirmPassword) {
       return toast.error("Passwords do not match");
     }
 
     try {
-      const response = await fetch("http://localhost:8080/api/user/register", {
-        method: "POST",
+      const response = await fetch(
+        "http://localhost:8080/api/user/register",
+        {
+          method: "POST",
 
-        headers: {
-          "Content-Type": "application/json",
-        },
+          headers: {
+            "Content-Type": "application/json",
+          },
 
-        body: JSON.stringify({
-          name: formData.name,
-
-          email: formData.email,
-
-          password: formData.password,
-        }),
-      });
+          body: JSON.stringify({
+            name: formData.name.trim(),
+            email: formData.email.trim(),
+            password: formData.password,
+          }),
+        }
+      );
 
       const data = await response.json();
 
       if (data.success) {
         toast.success("Registration Successful");
+
+        setFormData({
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        });
 
         navigate("/login");
       } else {
@@ -62,7 +90,6 @@ const Register = () => {
       }
     } catch (error) {
       console.log(error);
-
       toast.error("Registration Failed");
     }
   };
@@ -89,7 +116,6 @@ const Register = () => {
         </div>
 
         {/* RIGHT SIDE FORM */}
-     
         <div className="w-full max-w-xl mx-auto bg-transparent">
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-slate-900 tracking-tight text-center lg:text-left">
             Register
@@ -99,7 +125,10 @@ const Register = () => {
             Track • Save • Grow
           </p>
 
-          <form onSubmit={handleRegister} className="space-y-7 sm:space-y-8">
+          <form
+            onSubmit={handleRegister}
+            className="space-y-7 sm:space-y-8 mt-10"
+          >
             {/* NAME */}
             <div>
               <label className="text-gray-600 block mb-3 text-sm sm:text-base">
@@ -112,6 +141,7 @@ const Register = () => {
                 <input
                   type="text"
                   name="name"
+                  required
                   placeholder="Enter your name"
                   value={formData.name}
                   onChange={handleChange}
@@ -132,6 +162,7 @@ const Register = () => {
                 <input
                   type="email"
                   name="email"
+                  required
                   placeholder="Enter your email"
                   value={formData.email}
                   onChange={handleChange}
@@ -152,6 +183,7 @@ const Register = () => {
                 <input
                   type="password"
                   name="password"
+                  required
                   placeholder="Enter password"
                   value={formData.password}
                   onChange={handleChange}
@@ -172,6 +204,7 @@ const Register = () => {
                 <input
                   type="password"
                   name="confirmPassword"
+                  required
                   placeholder="Confirm password"
                   value={formData.confirmPassword}
                   onChange={handleChange}

@@ -1,7 +1,5 @@
 import { User } from "../models/user.model.js";
-
 import bcrypt from "bcryptjs";
-
 import jwt from "jsonwebtoken";
 
 export const JWT_SECRET_KEY = "MY_SECRET_KEY";
@@ -14,10 +12,16 @@ export const registerUser = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
 
+    // VALIDATION
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Name, Email and Password are required",
+      });
+    }
+
     // CHECK EXISTING USER
-    const existingUser = await User.findOne({
-      email,
-    });
+    const existingUser = await User.findOne({ email });
 
     if (existingUser) {
       return res.status(400).json({
@@ -60,18 +64,27 @@ export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // VALIDATION
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and Password are required",
+      });
+    }
+
     // =========================
     // STATIC ADMIN LOGIN
     // =========================
 
-    if (email === "sujaladmin@gmail.com" && password === "admin@3505") {
+    if (
+      email === "sujaladmin@gmail.com" &&
+      password === "admin@3505"
+    ) {
       const token = jwt.sign(
         {
           role: "admin",
         },
-
         JWT_SECRET_KEY,
-
         {
           expiresIn: "7d",
         }
@@ -89,9 +102,7 @@ export const loginUser = async (req, res) => {
     // USER LOGIN
     // =========================
 
-    const user = await User.findOne({
-      email,
-    });
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({
@@ -119,9 +130,7 @@ export const loginUser = async (req, res) => {
         userId: user._id,
         role: "user",
       },
-
       JWT_SECRET_KEY,
-
       {
         expiresIn: "7d",
       }
@@ -161,7 +170,7 @@ export const getUsers = async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: error.message || "Internal Server Error",
+      message: error.message,
     });
   }
 };
@@ -190,7 +199,7 @@ export const deleteUser = async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: error.message || "Internal Server Error",
+      message: error.message,
     });
   }
 };
@@ -201,18 +210,8 @@ export const deleteUser = async (req, res) => {
 
 export const getProfile = async (req, res) => {
   try {
-    // CHECK USER ID
-    if (!req.userId) {
-      return res.status(401).json({
-        success: false,
-        message: "Unauthorized",
-      });
-    }
-
-    // FIND USER
     const user = await User.findById(req.userId).select("-password");
 
-    // USER NOT FOUND
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -229,7 +228,7 @@ export const getProfile = async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: error.message || "Internal Server Error",
+      message: error.message,
     });
   }
 };
@@ -240,14 +239,6 @@ export const getProfile = async (req, res) => {
 
 export const updateProfile = async (req, res) => {
   try {
-    // CHECK USER ID
-    if (!req.userId) {
-      return res.status(401).json({
-        success: false,
-        message: "Unauthorized",
-      });
-    }
-
     const {
       name,
       email,
@@ -258,7 +249,6 @@ export const updateProfile = async (req, res) => {
       profession,
     } = req.body;
 
-    // UPDATE DATA
     const updateData = {
       name,
       email,
@@ -269,12 +259,10 @@ export const updateProfile = async (req, res) => {
       profession,
     };
 
-    // IMAGE UPLOAD
     if (req.file) {
       updateData.profileImage = req.file.filename;
     }
 
-    // UPDATE USER
     const updatedUser = await User.findByIdAndUpdate(
       req.userId,
       updateData,
@@ -283,7 +271,6 @@ export const updateProfile = async (req, res) => {
       }
     ).select("-password");
 
-    // USER NOT FOUND
     if (!updatedUser) {
       return res.status(404).json({
         success: false,
@@ -301,7 +288,7 @@ export const updateProfile = async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: error.message || "Internal Server Error",
+      message: error.message,
     });
   }
 };
@@ -312,20 +299,15 @@ export const updateProfile = async (req, res) => {
 
 export const changePassword = async (req, res) => {
   try {
-    const {
-      currentPassword,
-      newPassword,
-    } = req.body;
+    const { currentPassword, newPassword } = req.body;
 
-    // CHECK USER ID
-    if (!req.userId) {
-      return res.status(401).json({
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({
         success: false,
-        message: "Unauthorized",
+        message: "Current Password and New Password are required",
       });
     }
 
-    // FIND USER
     const user = await User.findById(req.userId);
 
     if (!user) {
@@ -335,7 +317,6 @@ export const changePassword = async (req, res) => {
       });
     }
 
-    // CHECK CURRENT PASSWORD
     const isMatch = await bcrypt.compare(
       currentPassword,
       user.password
@@ -348,13 +329,11 @@ export const changePassword = async (req, res) => {
       });
     }
 
-    // HASH NEW PASSWORD
     const hashedPassword = await bcrypt.hash(
       newPassword,
       10
     );
 
-    // UPDATE PASSWORD
     user.password = hashedPassword;
 
     await user.save();
@@ -368,7 +347,7 @@ export const changePassword = async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: error.message || "Internal Server Error",
+      message: error.message,
     });
   }
 };

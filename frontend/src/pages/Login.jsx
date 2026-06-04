@@ -1,36 +1,46 @@
 import React, { useState } from "react";
-
 import { Link, useNavigate } from "react-router";
-
 import { toast } from "react-toastify";
-
 import { Mail, Lock } from "lucide-react";
 
 const Login = () => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
 
   // LOGIN
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    // EMPTY FIELD VALIDATION
+    if (!email.trim() || !password.trim()) {
+      return toast.error("Email and Password are required");
+    }
+
+    // EMAIL VALIDATION
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      return toast.error("Please enter a valid email");
+    }
+
     try {
-      const response = await fetch("http://localhost:8080/api/user/login", {
-        method: "POST",
+      const response = await fetch(
+        "http://localhost:8080/api/user/login",
+        {
+          method: "POST",
 
-        headers: {
-          "Content-Type": "application/json",
-        },
+          headers: {
+            "Content-Type": "application/json",
+          },
 
-        body: JSON.stringify({
-          email,
-
-          password,
-        }),
-      });
+          body: JSON.stringify({
+            email: email.trim(),
+            password,
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -39,13 +49,23 @@ const Login = () => {
 
         localStorage.setItem("token", data.token);
 
-        localStorage.setItem("user", JSON.stringify(data.user));
-        const userRole = data.user.role;
+        // USER LOGIN
+        if (data.user) {
+          localStorage.setItem(
+            "user",
+            JSON.stringify(data.user)
+          );
 
-        if (userRole === "ADMIN") {
+          if (data.user.role === "ADMIN") {
+            navigate("/admin/dashboard");
+          } else {
+            navigate("/user/dashboard");
+          }
+        }
+
+        // STATIC ADMIN LOGIN
+        else if (data.role === "admin") {
           navigate("/admin/dashboard");
-        } else {
-          navigate("/user/dashboard");
         }
       } else {
         toast.error(data.message);
@@ -69,28 +89,35 @@ const Login = () => {
       <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 items-center gap-10 z-10">
         {/* LEFT SIDE */}
         <div className="w-full max-w-xl mx-auto">
-       
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-slate-900 tracking-tight text-center lg:text-left">
-          Login
+            Login
           </h1>
 
-  <p className="mt-4 text-lg sm:text-xl text-indigo-600 font-semibold tracking-wide text-center lg:text-left">
-    Continue Tracking Your Expenses
-  </p>
-          
-          <form onSubmit={handleLogin} className="space-y-10">
+          <p className="mt-4 text-lg sm:text-xl text-indigo-600 font-semibold tracking-wide text-center lg:text-left">
+            Continue Tracking Your Expenses
+          </p>
+
+          <form
+            onSubmit={handleLogin}
+            className="space-y-10 mt-10"
+          >
             {/* EMAIL */}
             <div>
-              <label className="text-gray-600 block mb-3">Email</label>
+              <label className="text-gray-600 block mb-3">
+                Email
+              </label>
 
               <div className="flex items-center border-b border-gray-400 pb-3">
                 <Mail size={22} className="text-gray-500 mr-4" />
 
                 <input
                   type="email"
+                  required
                   placeholder="Enter your email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) =>
+                    setEmail(e.target.value)
+                  }
                   className="w-full bg-transparent outline-none text-lg placeholder-gray-400"
                 />
               </div>
@@ -98,16 +125,21 @@ const Login = () => {
 
             {/* PASSWORD */}
             <div>
-              <label className="text-gray-600 block mb-3">Password</label>
+              <label className="text-gray-600 block mb-3">
+                Password
+              </label>
 
               <div className="flex items-center border-b border-gray-400 pb-3">
                 <Lock size={22} className="text-gray-500 mr-4" />
 
                 <input
                   type="password"
+                  required
                   placeholder="Enter your password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) =>
+                    setPassword(e.target.value)
+                  }
                   className="w-full bg-transparent outline-none text-lg placeholder-gray-400"
                 />
               </div>
