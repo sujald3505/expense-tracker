@@ -337,7 +337,7 @@ const Transactions = () => {
               <option value="lastmonth">Last Month</option>
 
               <option value="year">This Year</option>
-            </select>
+            </select> 
           </div>
         </div>
 
@@ -433,6 +433,7 @@ const Transactions = () => {
         </div>
 
         {/* ================= DESKTOP TABLE ================= */}
+
 
         <div
           className="
