@@ -87,15 +87,7 @@ Open the local URL printed in the terminal.
 - Make sure the MongoDB database is reachable by the backend.
 - Keep `.env` files and production secrets out of version control.
 
-## 🖼️ Screenshots
 
-Add screenshots of the application here to showcase the interface.
-
-```md
-![Expense Tracker Dashboard](path/to/your-screenshot.png)
-```
-
-Replace the example path with the actual screenshot path in this repository.
 
 ## 🛣️ Future Improvements
 
